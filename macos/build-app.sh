@@ -8,8 +8,8 @@ revision="${2:-$(git -C "$root" rev-parse HEAD)}"
 version="${CHROMATIC_VERSION:-0.2.0}"
 app="$out/Chromatic Helper.app"
 [ ! -e "$app" ] || { echo 'Use a fresh output directory.' >&2; exit 1; }
-mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/helper"
-"${BUN_BIN:-bun}" build "$root/helper/main.mjs" --compile --target=bun-darwin-arm64 --outfile "$app/Contents/Resources/helper/chromatic-wifi"
+mkdir -p "$app/Contents/MacOS" "$app/Contents/MacOS"
+"${BUN_BIN:-bun}" build "$root/helper/main.mjs" --compile --target=bun-darwin-arm64 --outfile "$app/Contents/MacOS/chromatic-wifi"
 xcrun swiftc -O -target arm64-apple-macos13.0 -framework AppKit "$root/macos/HelperApp.swift" -o "$app/Contents/MacOS/ChromaticHelper"
 python3 - "$app" "$version" "$revision" <<'PY'
 import sys,plistlib,pathlib

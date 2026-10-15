@@ -68,7 +68,7 @@ final class HelperApp: NSObject, NSApplicationDelegate {
         guard process == nil, !stopping else { return }
         launchKey = nil
         buffer = ""
-        guard let executable = Bundle.main.url(forResource: "chromatic-wifi", withExtension: nil, subdirectory: "helper") else {
+        guard let executable = Bundle.main.url(forAuxiliaryExecutable: "chromatic-wifi") else {
             status.stringValue = "Helper missing. Download a fresh copy from the official GitHub release."
             setReady(false)
             return

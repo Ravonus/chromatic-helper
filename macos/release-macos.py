@@ -21,7 +21,7 @@ else:
     required=['NOTARY_KEY_ID','NOTARY_ISSUER_ID','NOTARY_KEY_PATH']
     if not all(os.environ.get(k) for k in required):raise SystemExit('Configure Apple notarization credentials before signing a release.')
     auth=['--key',os.environ['NOTARY_KEY_PATH'],'--key-id',os.environ['NOTARY_KEY_ID'],'--issuer',os.environ['NOTARY_ISSUER_ID']]
-helper=app/'Contents/Resources/helper/chromatic-wifi'
+helper=app/'Contents/MacOS/chromatic-wifi'
 run(['codesign','--force','--options','runtime','--timestamp','--identifier','io.onkeel.chromatic-helper.transport','--entitlements',str(root/'helper.entitlements.plist'),'--sign',identity,str(helper)])
 run(['codesign','--force','--options','runtime','--timestamp','--sign',identity,str(app)])
 run(['codesign','--verify','--strict','--deep',str(app)])
