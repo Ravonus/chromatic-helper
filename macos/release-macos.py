@@ -7,6 +7,12 @@ import hashlib,json,os,pathlib,plistlib,re,subprocess,sys
 app=pathlib.Path(sys.argv[1]).resolve()
 out=pathlib.Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True)
 root=pathlib.Path(__file__).resolve().parent
+# Do not sign or submit an incomplete app, even if compilation itself succeeded.
+for relative in ['Contents/Info.plist','Contents/MacOS/ChromaticHelper','Contents/MacOS/chromatic-wifi','Contents/Resources/LICENSE.txt','Contents/Resources/Bun-LICENSE.md','Contents/Resources/SOURCE-REVISION']:
+    if not (app/relative).is_file():raise SystemExit('Incomplete app: missing '+relative)
+info=plistlib.loads((app/'Contents/Info.plist').read_bytes())
+revision=(app/'Contents/Resources/SOURCE-REVISION').read_text().strip()
+if not re.fullmatch('[a-f0-9]{40}',revision) or info.get('ChromaticSourceRevision')!=revision:raise SystemExit('App requires an exact source commit before distribution.')
 
 def run(args):
     return subprocess.run(args,check=True,capture_output=True,text=True).stdout
