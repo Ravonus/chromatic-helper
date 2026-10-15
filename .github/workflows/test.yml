@@ -15,3 +15,4 @@ jobs:
           bun-version: '1.3.14'
       - run: node --test test/peer.test.mjs test/client.test.mjs
       - run: bun test test/helper.test.mjs
+      - run: python3 -m unittest macos/test_release.py

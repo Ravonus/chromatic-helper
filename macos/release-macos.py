@@ -15,7 +15,13 @@ revision=(app/'Contents/Resources/SOURCE-REVISION').read_text().strip()
 if not re.fullmatch('[a-f0-9]{40}',revision) or info.get('ChromaticSourceRevision')!=revision:raise SystemExit('App requires an exact source commit before distribution.')
 
 def run(args):
-    return subprocess.run(args,check=True,capture_output=True,text=True).stdout
+    result=subprocess.run(args,capture_output=True,text=True)
+    if result.returncode:
+        message=result.stderr or result.stdout or 'No diagnostic output.'
+        for field in ['NOTARY_KEY_ID','NOTARY_ISSUER_ID','NOTARY_KEY_PATH','SIGNING_IDENTITY']:
+            if os.environ.get(field):message=message.replace(os.environ[field],'[redacted]')
+        raise SystemExit(args[0]+' failed: '+message[:2000])
+    return result.stdout
 identity=os.environ.get('SIGNING_IDENTITY')
 if not identity:
     identities=re.findall(r'\b([A-Fa-f0-9]{40})\s+"Developer ID Application:[^"\n]+"',run(['security','find-identity','-v','-p','codesigning']))
