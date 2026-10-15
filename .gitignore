@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+.env*
+*.p8
+*.p12
+*.pfx
+*.keychain*
+/dist/*
+!/dist/cwl.mjs
+!/dist/cwl.wasm
+/release/
+/build/
